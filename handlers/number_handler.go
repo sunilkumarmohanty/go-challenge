@@ -90,6 +90,7 @@ func retrieve(ctx context.Context, urls []string, resultCh chan *result, done ch
 	wg.Wait()
 	//closes the sorter channel
 	close(sorter.receiver)
+	//wait till sorter finishes its job
 	<-sorter.done
 	//notifies the main subprocess that all the work is done
 	done <- true
