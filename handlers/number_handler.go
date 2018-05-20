@@ -16,7 +16,7 @@ const (
 	timeout = 490
 )
 
-//NumberHandler handles the /number endpoint
+//NumberHandler handles the /numbers endpoint
 func NumberHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)

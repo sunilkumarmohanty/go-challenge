@@ -15,6 +15,7 @@ type task struct {
 }
 
 func newTask(ctx context.Context, u string, sortCh chan *result) *task {
+	//Check if the url is valid or not
 	if _, err := url.Parse(u); err != nil {
 		log.Printf("Invalid url %v", u)
 		return nil
@@ -26,8 +27,8 @@ func newTask(ctx context.Context, u string, sortCh chan *result) *task {
 	}
 }
 
+//do retrieves the numbers from the url
 func (t *task) do() {
-
 	req, err := http.NewRequest(http.MethodGet, t.url, nil)
 	if err != nil {
 		log.Printf("Error creating request %v. Error:%v", t.url, err)
