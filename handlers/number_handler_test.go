@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -169,18 +168,17 @@ func TestNumberHandler(t *testing.T) {
 			servers := make([]*httptest.Server, 0)
 			for _, field := range tt.usfs {
 
-				wrapper := func(field upstreamServerFields) http.HandlerFunc {
+				makeHandler := func(field upstreamServerFields) http.HandlerFunc {
 					return func(w http.ResponseWriter, r *http.Request) {
 						if field.statusCode != http.StatusOK {
 							w.WriteHeader(field.statusCode)
 							return
 						}
 						time.Sleep(field.timeout)
-						log.Printf("Result %+v", field.result)
 						json.NewEncoder(w).Encode(field.result)
 					}
 				}(field)
-				servers = append(servers, httptest.NewServer(wrapper))
+				servers = append(servers, httptest.NewServer(makeHandler))
 
 			}
 
@@ -191,7 +189,6 @@ func TestNumberHandler(t *testing.T) {
 			if len(tt.invalidURL) != 0 {
 				query = fmt.Sprintf("%s&u=%s", query, tt.invalidURL)
 			}
-			log.Println(query)
 			req, err := http.NewRequest(tt.method, "/?"+query, nil)
 			if err != nil {
 				t.Fatal(err)
